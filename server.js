@@ -4,14 +4,15 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const PORT = 3000;
+// Use Render's environment port dynamically, defaulting to 3000 locally
+const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const DATA_FILE = path.join(__dirname, 'data.json');
 
-// Read data from JSON file
+// Read data from JSON file with hardcoded fallback defaults
 function loadData() {
   try {
     if (!fs.existsSync(DATA_FILE)) {
@@ -19,7 +20,8 @@ function loadData() {
         users: [
           { id: 1, name: "Manager", email: "manager@test.com", password: "123", role: "manager" },
           { id: 2, name: "Sahil", email: "sahil@test.com", password: "123", role: "employee" },
-          { id: 3, name: "Aditya", email: "aditya@test.com", password: "123", role: "employee" }
+          { id: 3, name: "Aditya", email: "aditya@test.com", password: "123", role: "employee" },
+          { id: 1785410801632, name: "Rushant", email: "rushantzatale@gmail.com", password: "123", role: "employee" }
         ],
         tasks: []
       };
@@ -44,11 +46,16 @@ function saveData(data) {
 
 // ---------------- API ENDPOINTS ---------------- //
 
-// Original Simple Login Endpoint
+// Robust Login Endpoint (Handles accidental whitespace/case sensitivity)
 app.post('/api/login', (req, res) => {
   const { users } = loadData();
   const { email, password } = req.body;
-  const user = users.find(u => u.email === email && u.password === password);
+
+  const cleanEmail = email ? email.trim().toLowerCase() : '';
+  const cleanPassword = password ? password.trim() : '';
+
+  const user = users.find(u => u.email.toLowerCase() === cleanEmail && u.password === cleanPassword);
+  
   if (!user) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
@@ -60,11 +67,20 @@ app.post('/api/users', (req, res) => {
   const db = loadData();
   const { name, email, password } = req.body;
   
-  if (db.users.some(u => u.email === email)) {
+  const cleanEmail = email ? email.trim().toLowerCase() : '';
+
+  if (db.users.some(u => u.email.toLowerCase() === cleanEmail)) {
     return res.status(400).json({ error: "Email already registered" });
   }
 
-  const newUser = { id: Date.now(), name, email, password, role: 'employee' };
+  const newUser = { 
+    id: Date.now(), 
+    name: name.trim(), 
+    email: cleanEmail, 
+    password: password.trim(), 
+    role: 'employee' 
+  };
+  
   db.users.push(newUser);
   saveData(db);
 
@@ -80,7 +96,7 @@ app.get('/api/employees', (req, res) => {
   res.json(employees);
 });
 
-// Advanced Assign Task (With Priority & Due Date)
+// Assign Task
 app.post('/api/tasks', (req, res) => {
   const db = loadData();
   const { assignedTo, title, description, priority, dueDate } = req.body;
@@ -144,6 +160,11 @@ app.delete('/api/tasks/:id', (req, res) => {
   res.json({ message: "Task deleted successfully" });
 });
 
+// Catch-all route to serve index.html for frontend routing/redirects
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
