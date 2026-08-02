@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Management Portal Pro</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Auth View -->
+  <div id="auth-section" class="auth-card">
+    <h2>Login Portal</h2>
+    <form id="login-form">
+      <input type="email" id="login-email" placeholder="Email (manager@test.com)" required />
+      <input type="password" id="login-password" placeholder="Password (123)" required />
+      <button type="submit" class="btn btn-primary">Log In</button>
+    </form>
+  </div>
+
+  <!-- Dashboard View -->
+  <div id="dashboard-section" class="dashboard hidden">
+    <header class="navbar">
+      <h2>Welcome, <span id="user-display-name"></span></h2>
+      <button id="logout-btn" class="btn btn-secondary">Log Out</button>
+    </header>
+
+    <!-- Manager Control Panel -->
+    <div id="manager-panel" class="hidden">
+      <!-- Live Analytics Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h4>Total Tasks</h4>
+          <span id="stat-total">0</span>
+        </div>
+        <div class="stat-card">
+          <h4>Completed</h4>
+          <span id="stat-completed" class="stat-green">0</span>
+        </div>
+        <div class="stat-card">
+          <h4>Pending</h4>
+          <span id="stat-pending" class="stat-yellow">0</span>
+        </div>
+        <div class="stat-card">
+          <h4>High Priority</h4>
+          <span id="stat-high" class="stat-red">0</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Create New Employee</h3>
+          <form id="add-employee-form">
+            <input type="text" id="emp-name" placeholder="Name" required />
+            <input type="email" id="emp-email" placeholder="Email" required />
+            <input type="password" id="emp-pass" placeholder="Password" required />
+            <button type="submit" class="btn btn-success">Grant Access</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3>Assign Task</h3>
+          <form id="assign-task-form">
+            <select id="employee-select" required>
+              <option value="">Select Employee</option>
+            </select>
+            <input type="text" id="task-title" placeholder="Task Title" required />
+            <textarea id="task-desc" placeholder="Task Description / Details..."></textarea>
+            <div class="form-row">
+              <select id="task-priority">
+                <option value="Low">Low Priority</option>
+                <option value="Medium" selected>Medium Priority</option>
+                <option value="High">High Priority</option>
+              </select>
+              <input type="date" id="task-duedate" />
+            </div>
+            <button type="submit" class="btn btn-primary">Assign Task</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tasks Board -->
+    <div class="card">
+      <div class="board-header">
+        <h3>Task Center</h3>
+        <div class="filter-group">
+          <button class="filter-btn active" onclick="filterTasks('All')">All</button>
+          <button class="filter-btn" onclick="filterTasks('Pending')">Pending</button>
+          <button class="filter-btn" onclick="filterTasks('Completed')">Completed</button>
+        </div>
+      </div>
+      <div id="task-grid" class="task-grid"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

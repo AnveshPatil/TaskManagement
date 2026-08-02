@@ -1,0 +1,46 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Manager",
+      "email": "manager@test.com",
+      "password": "123",
+      "role": "manager"
+    },
+    {
+      "id": 2,
+      "name": "Sahil",
+      "email": "sahil@test.com",
+      "password": "123",
+      "role": "employee"
+    },
+    {
+      "id": 3,
+      "name": "Aditya",
+      "email": "aditya@test.com",
+      "password": "123",
+      "role": "employee"
+    },
+    {
+      "id": 1785410801632,
+      "name": "Rushant",
+      "email": "rushantzatale@gmail.com",
+      "password": "123",
+      "role": "employee"
+    }
+  ],
+  "tasks": [
+    {
+      "id": 101,
+      "assignedTo": 2,
+      "title": "Database Migration",
+      "status": "Pending"
+    },
+    {
+      "id": 1785410808011,
+      "assignedTo": 1785410801632,
+      "title": "fix the bug",
+      "status": "Pending"
+    }
+  ]
+}
